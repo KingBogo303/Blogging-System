@@ -18,6 +18,8 @@ import TagBlog from "./pages/TagBlog";
 import CategoryBlog from "./pages/CategoryBlog";
 import ScrollToTop from "./components/ScrollToTop";
 import Blogs from "./pages/Blogs";
+import Dictaphone from "./components/Dictaphone";
+import Main from "./components/AMAIN";
 
 function App() {
   const [active, setActive] = useState("home");
@@ -83,8 +85,13 @@ function App() {
           }
         />
         <Route path="/blogs" element={<Blogs setActive={setActive} />} />
+        <Route path="/dictaphone" element={<Dictaphone />} />
+        <Route path="/testSpeech" element={<Main />} />
         <Route path="/tag/:tag" element={<TagBlog setActive={setActive} />} />
-        <Route path="/category/:category" element={<CategoryBlog setActive={setActive}  />} />
+        <Route
+          path="/category/:category"
+          element={<CategoryBlog setActive={setActive} />}
+        />
         <Route path="/about" element={<About />} />
         <Route
           path="/auth"
