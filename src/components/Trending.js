@@ -6,7 +6,7 @@ import "owl.carousel/dist/assets/owl.theme.default.css";
 
 const Trending = ({ blogs }) => {
   const options = {
-    loop: true,
+    loop: false,
     margin: 10,
     nav: true,
     responsive: {

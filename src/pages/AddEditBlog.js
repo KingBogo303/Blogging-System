@@ -166,8 +166,9 @@ const AddEditBlog = ({ user, setActive }) => {
                     name="radioOption"
                     checked={trending === "yes"}
                     onChange={handleTrending}
+                    id="radioOption1"
                   />
-                  <label htmlFor="radioOption" className="form-check-label">
+                  <label htmlFor="radioOption1" className="form-check-label">
                     Yes&nbsp;
                   </label>
                   <input
@@ -177,8 +178,9 @@ const AddEditBlog = ({ user, setActive }) => {
                     name="radioOption"
                     checked={trending === "no"}
                     onChange={handleTrending}
+                    id="radioOption2"
                   />
-                  <label htmlFor="radioOption" className="form-check-label">
+                  <label htmlFor="radioOption2" className="form-check-label">
                     No
                   </label>
                 </div>
@@ -212,7 +214,7 @@ const AddEditBlog = ({ user, setActive }) => {
                 <input
                   type="file"
                   className="form-control"
-                  required
+                  required={id? false : true}
                   onChange={(e) => setFile(e.target.files[0])}
                 />
               </div>

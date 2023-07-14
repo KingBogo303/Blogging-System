@@ -66,7 +66,6 @@ const Home = ({ setActive, user, active }) => {
         const uniqueTags = [...new Set(tags)];
         setTags(uniqueTags);
         setTotalBlogs(list);
-        // setBlogs(list);
         setLoading(false);
         setActive("home");
       },

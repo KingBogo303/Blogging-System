@@ -92,7 +92,12 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route
           path="/auth"
-          element={<Auth setActive={setActive} setUser={setUser} />}
+          element={
+            user?.uid ?(
+          <Auth setActive={setActive} setUser={setUser} />)
+          :
+          <Navigate to="/" />
+        }
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
