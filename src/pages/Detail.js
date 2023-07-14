@@ -177,7 +177,6 @@ const Detail = ({ setActive, user }) => {
               </div>
               <CommentBox
                 userId={userId}
-                error={error}
                 userComment={userComment}
                 setUserComment={setUserComment}
                 handleComment={handleComment}
