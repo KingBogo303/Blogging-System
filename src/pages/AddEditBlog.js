@@ -152,7 +152,7 @@ const AddEditBlog = ({ user, setActive }) => {
               <div className="col-12 py-3">
                 <ReactTagInput
                   tags={tags}
-                  placeholder="Tags"
+                  placeholder="Tags eg. Mythology, Gaming, beauty"
                   onChange={handleTags}
                 />
               </div>
