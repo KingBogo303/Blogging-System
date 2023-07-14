@@ -88,14 +88,12 @@ const Home = ({ setActive, user, active }) => {
 
   const getBlogs = async () => {
     const blogRef = collection(db, "blogs");
-    console.log(blogRef);
     const firstFour = query(blogRef, orderBy("title"), limit(4));
     const docSnapshot = await getDocs(firstFour);
     setBlogs(docSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     setLastVisible(docSnapshot.docs[docSnapshot.docs.length - 1]);
   };
 
-  console.log("blogs", blogs);
 
   const updateState = (docSnapshot) => {
     const isCollectionEmpty = docSnapshot.size === 0;
@@ -160,12 +158,15 @@ const Home = ({ setActive, user, active }) => {
     return <Spinner />;
   }
 
+  
+
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure wanted to delete that blog ?")) {
       try {
         setLoading(true);
         await deleteDoc(doc(db, "blogs", id));
         toast.success("Blog deleted successfully");
+        getBlogs()
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -173,10 +174,10 @@ const Home = ({ setActive, user, active }) => {
     }
   };
 
+
   const handleChange = (e) => {
     const { value } = e.target;
     if (isEmpty(value)) {
-      console.log("test");
       getBlogs();
       setHide(false);
     }
@@ -201,7 +202,6 @@ const Home = ({ setActive, user, active }) => {
     };
   });
 
-  console.log("categoryCount", categoryCount);
 
   return (
     <div className="container-fluid pb-4 pt-4 padding">

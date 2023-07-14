@@ -3,7 +3,7 @@ import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { db, storage } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import {
   addDoc,
   collection,
@@ -35,6 +35,7 @@ const categoryOption = [
 
 const AddEditBlog = ({ user, setActive }) => {
   const [form, setForm] = useState(initialState);
+  const [imgAvail, setImgAvail] = useState(null);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(null);
 
@@ -46,36 +47,17 @@ const AddEditBlog = ({ user, setActive }) => {
 
   useEffect(() => {
     const uploadFile = () => {
+      setImgAvail(false)
       const storageRef = ref(storage, file.name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setProgress(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-            toast.info("Image upload to firebase successfully");
-            setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
-          });
-        }
-      );
+      uploadBytes(storageRef, file).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((downloadUrl) => {
+          toast.info("Image upload to firebase successfully");
+          setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
+        });
+        setImgAvail(true)
+
+      })
+     
     };
 
     file && uploadFile();
@@ -155,7 +137,7 @@ const AddEditBlog = ({ user, setActive }) => {
           </div>
         </div>
         <div className="row h-100 justify-content-center align-items-center">
-          <div className="col-10 col-md-8 col-lg-6">
+          <div className="col-10 col-md-8 ">
             <form className="row blog-form" onSubmit={handleSubmit}>
               <div className="col-12 py-3">
                 <input
@@ -235,7 +217,7 @@ const AddEditBlog = ({ user, setActive }) => {
                 <button
                   className="btn btn-add"
                   type="submit"
-                  disabled={progress !== null && progress < 100}
+                  disabled={imgAvail === false}
                 >
                   {id ? "Update" : "Submit"}
                 </button>

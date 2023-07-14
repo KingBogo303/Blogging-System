@@ -28,6 +28,7 @@ const Detail = ({ setActive, user }) => {
   const userId = user?.uid;
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [blog, setBlog] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [tags, setTags] = useState([]);
@@ -88,6 +89,10 @@ const Detail = ({ setActive, user }) => {
   };
 
   const handleComment = async (e) => {
+    if(userComment.length < 50){
+      setError("Enter a minimum of 50 characters")
+      return
+    } 
     e.preventDefault();
     comments.push({
       createdAt: Timestamp.fromDate(new Date()),
@@ -125,7 +130,6 @@ const Detail = ({ setActive, user }) => {
     }
   };
 
-  console.log("relatedBlogs", relatedBlogs);
   return (
     <div className="single">
       <div
@@ -163,8 +167,8 @@ const Detail = ({ setActive, user }) => {
                     />
                   ) : (
                     <>
-                      {comments?.map((comment) => (
-                        <UserComments {...comment} />
+                      {comments?.map((comment, idx) => (
+                        <UserComments key={idx} {...comment} />
                       ))}
                     </>
                   )}
@@ -172,6 +176,7 @@ const Detail = ({ setActive, user }) => {
               </div>
               <CommentBox
                 userId={userId}
+                error={error}
                 userComment={userComment}
                 setUserComment={setUserComment}
                 handleComment={handleComment}
