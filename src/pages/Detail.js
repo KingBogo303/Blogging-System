@@ -28,7 +28,6 @@ const Detail = ({ setActive, user }) => {
   const userId = user?.uid;
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [blog, setBlog] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [tags, setTags] = useState([]);
@@ -89,10 +88,10 @@ const Detail = ({ setActive, user }) => {
   };
 
   const handleComment = async (e) => {
-    if(userComment.trim().length < 1){
-      toast.error("Enter text for comment")
-      return
-    } 
+    if (userComment.trim().length < 1) {
+      toast.error("Enter text for comment");
+      return;
+    }
     e.preventDefault();
     comments.push({
       createdAt: Timestamp.fromDate(new Date()),
@@ -130,7 +129,6 @@ const Detail = ({ setActive, user }) => {
     }
   };
 
-  
   // ---------------- funtion for scroll indicator ----------------------//
   window.onscroll = () => {
     var winScroll =
@@ -142,10 +140,9 @@ const Detail = ({ setActive, user }) => {
     document.getElementById("myBar").style.width = scrolled + "%";
   };
 
-
   return (
     <div className="single">
-       <div class="scroll-header">
+      <div class="scroll-header">
         <div class="progress-container">
           <div class="progress-bar" id="myBar"></div>
         </div>
@@ -154,7 +151,7 @@ const Detail = ({ setActive, user }) => {
         className="blog-title-box"
         // style={{ backgroundImage: `url('${blog?.imgUrl}')` }}
       >
-        <img src={`${blog?.imgUrl}`} className="dImg"  alt="" />
+        <img src={`${blog?.imgUrl}`} className="dImg" alt="" />
         <div className="overlay"></div>
         <div className="blog-title">
           <span>{blog?.timestamp.toDate().toDateString()}</span>
