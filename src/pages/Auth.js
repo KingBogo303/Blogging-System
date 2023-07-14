@@ -16,11 +16,17 @@ const initialState = {
   confirmPassword: "",
 };
 
+  
+
 const Auth = ({ setActive, setUser }) => {
   const [state, setState] = useState(initialState);
   const [signUp, setSignUp] = useState(false);
 
   const { email, password, firstName, lastName, confirmPassword } = state;
+
+  if(window.location.pathname){
+    setActive("login")
+  }
 
   const navigate = useNavigate();
 

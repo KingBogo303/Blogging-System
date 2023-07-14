@@ -3,7 +3,7 @@ import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { db, storage } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   addDoc,
   collection,
@@ -37,7 +37,6 @@ const AddEditBlog = ({ user, setActive }) => {
   const [form, setForm] = useState(initialState);
   const [imgAvail, setImgAvail] = useState(null);
   const [file, setFile] = useState(null);
-  const [progress, setProgress] = useState(null);
 
   const { id } = useParams();
 
@@ -144,6 +143,7 @@ const AddEditBlog = ({ user, setActive }) => {
                   type="text"
                   className="form-control input-text-box"
                   placeholder="Title"
+                  required
                   name="title"
                   value={title}
                   onChange={handleChange}
@@ -186,6 +186,7 @@ const AddEditBlog = ({ user, setActive }) => {
               <div className="col-12 py-3">
                 <select
                   value={category}
+                  required
                   onChange={onCategoryChange}
                   className="catg-dropdown"
                 >
@@ -199,6 +200,7 @@ const AddEditBlog = ({ user, setActive }) => {
               </div>
               <div className="col-12 py-3">
                 <textarea
+                required
                   className="form-control description-box"
                   placeholder="Description"
                   value={description}
@@ -210,6 +212,7 @@ const AddEditBlog = ({ user, setActive }) => {
                 <input
                   type="file"
                   className="form-control"
+                  required
                   onChange={(e) => setFile(e.target.files[0])}
                 />
               </div>
