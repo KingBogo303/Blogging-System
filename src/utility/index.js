@@ -5,8 +5,7 @@ export const excerpt = (str, count) => {
   return str;
 };
 
-export const firstName = (name) =>{
-  const arr=name.split(" ")
-  return arr[0]
-
-}
+export const firstName = (name) => {
+  const arr = name.split(" ");
+  return arr[0];
+};

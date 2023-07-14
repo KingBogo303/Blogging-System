@@ -72,7 +72,6 @@ function App() {
           element={
             user?.uid ? <AddEditBlog user={user} /> :
               <Navigate to="/auth" />
-              // <Auth setActive={setActive} setUser={setUser} />
           }
         />
         <Route
@@ -93,10 +92,10 @@ function App() {
         <Route
           path="/auth"
           element={
-            user?.uid ?(
-          <Auth setActive={setActive} setUser={setUser} />)
-          :
-          <Navigate to="/" />
+            user?.uid ?
+              <Navigate to="/" />
+              :
+              <Auth setActive={setActive} setUser={setUser} />
         }
         />
         <Route path="*" element={<NotFound />} />

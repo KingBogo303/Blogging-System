@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const initialState = {
   firstName: "",
@@ -24,9 +25,9 @@ const Auth = ({ setActive, setUser }) => {
 
   const { email, password, firstName, lastName, confirmPassword } = state;
 
-  if(window.location.pathname){
+  useEffect(()=>{
     setActive("login")
-  }
+  },[setActive])
 
   const navigate = useNavigate();
 
