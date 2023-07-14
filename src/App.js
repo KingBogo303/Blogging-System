@@ -70,8 +70,7 @@ function App() {
         <Route
           path="/create"
           element={
-            user?.uid ? <AddEditBlog user={user} /> :
-              <Navigate to="/auth" />
+            user?.uid ? <AddEditBlog user={user} /> : <Navigate to="/auth" />
           }
         />
         <Route
@@ -87,16 +86,20 @@ function App() {
         <Route path="/blogs" element={<Blogs setActive={setActive} />} />
         <Route path="/tag/:tag" element={<TagBlog setActive={setActive} />} />
         <Route path="/speech" element={<Dictaphone />} />
-        <Route path="/category/:category" element={<CategoryBlog setActive={setActive} />} />
+        <Route
+          path="/category/:category"
+          element={<CategoryBlog setActive={setActive} />}
+        />
         <Route path="/about" element={<About />} />
         <Route
           path="/auth"
           element={
-            user?.uid ?
+            user?.uid ? (
               <Navigate to="/" />
-              :
+            ) : (
               <Auth setActive={setActive} setUser={setUser} />
-        }
+            )
+          }
         />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -130,8 +130,26 @@ const Detail = ({ setActive, user }) => {
     }
   };
 
+  
+  // ---------------- funtion for scroll indicator ----------------------//
+  window.onscroll = () => {
+    var winScroll =
+      document.body.scrollTop || document.documentElement.scrollTop;
+    var height =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    var scrolled = (winScroll / height) * 100;
+    document.getElementById("myBar").style.width = scrolled + "%";
+  };
+
+
   return (
     <div className="single">
+       <div class="scroll-header">
+        <div class="progress-container">
+          <div class="progress-bar" id="myBar"></div>
+        </div>
+      </div>
       <div
         className="blog-title-box"
         // style={{ backgroundImage: `url('${blog?.imgUrl}')` }}
