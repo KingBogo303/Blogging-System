@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const CommentBox = ({ userId, userComment, setUserComment,  handleComment }) => {
+const CommentBox = ({ userId, userComment, setUserComment, handleComment }) => {
   const navigate = useNavigate();
 
   // const [remainingWords, setRemainingWords] = useState();
@@ -12,8 +12,7 @@ const CommentBox = ({ userId, userComment, setUserComment,  handleComment }) => 
   //   setRemainingWords(50 - (userComment.trim().length))
   // }, [userComment])
 
-
-  useEffect(() => { }, [])
+  useEffect(() => {}, []);
 
   return (
     <>
