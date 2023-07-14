@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import FontAwesome from "react-fontawesome";
 import { Link } from "react-router-dom";
 import { excerpt } from "../utility";
@@ -17,7 +17,7 @@ const BlogSection = ({
 }) => {
   return (
     <div>
-      <div className="row pb-4" key={id}>
+      <div className="row pb-4  shadow-sm my-3" key={id}>
         <div className="col-md-5">
           <div className="hover-blogs-img">
             <div className="blogs-img">
@@ -36,7 +36,7 @@ const BlogSection = ({
             </span>
           </div>
           <div className="short-description text-start">
-            {excerpt(description, 120)}
+            {excerpt(description, 70)}
           </div>
           <Link to={`/detail/${id}`}>
             <button className="btn btn-read">Read More</button>

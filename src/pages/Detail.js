@@ -89,8 +89,8 @@ const Detail = ({ setActive, user }) => {
   };
 
   const handleComment = async (e) => {
-    if(userComment.length < 50){
-      setError("Enter a minimum of 50 characters")
+    if(userComment.trim().length < 1){
+      toast.error("Enter text for comment")
       return
     } 
     e.preventDefault();
@@ -134,8 +134,9 @@ const Detail = ({ setActive, user }) => {
     <div className="single">
       <div
         className="blog-title-box"
-        style={{ backgroundImage: `url('${blog?.imgUrl}')` }}
+        // style={{ backgroundImage: `url('${blog?.imgUrl}')` }}
       >
+        <img src={`${blog?.imgUrl}`} className="dImg"  alt="" />
         <div className="overlay"></div>
         <div className="blog-title">
           <span>{blog?.timestamp.toDate().toDateString()}</span>

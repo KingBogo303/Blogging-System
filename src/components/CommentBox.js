@@ -1,16 +1,16 @@
 import React from "react";
 import { useEffect } from "react";
-import { useState } from "react";
+// import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const CommentBox = ({ userId, userComment, setUserComment, error, handleComment }) => {
+const CommentBox = ({ userId, userComment, setUserComment,  handleComment }) => {
   const navigate = useNavigate();
 
-  const [remainingWords, setRemainingWords] = useState();
+  // const [remainingWords, setRemainingWords] = useState();
 
-  useEffect(() => {
-    setRemainingWords(50 - (userComment.trim().length))
-  }, [userComment])
+  // useEffect(() => {
+  //   setRemainingWords(50 - (userComment.trim().length))
+  // }, [userComment])
 
 
   useEffect(() => { }, [])
@@ -26,9 +26,9 @@ const CommentBox = ({ userId, userComment, setUserComment, error, handleComment 
             className="form-control description"
           />
           {
-            userComment.length < 50 ?
-              (<small>{`Number of characters remaining: ${remainingWords}`}</small>) :
-              ""
+            // userComment.length < 50 ?
+            //   (<small>{`Number of characters remaining: ${remainingWords}`}</small>) :
+            //   ""
           }
         </div>
       </form>
