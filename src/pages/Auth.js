@@ -17,17 +17,15 @@ const initialState = {
   confirmPassword: "",
 };
 
-  
-
 const Auth = ({ setActive, setUser }) => {
   const [state, setState] = useState(initialState);
   const [signUp, setSignUp] = useState(false);
 
   const { email, password, firstName, lastName, confirmPassword } = state;
 
-  useEffect(()=>{
-    setActive("login")
-  },[setActive])
+  useEffect(() => {
+    setActive("login");
+  }, [setActive]);
 
   const navigate = useNavigate();
 
@@ -38,12 +36,19 @@ const Auth = ({ setActive, setUser }) => {
   const handleAuth = async (e) => {
     e.preventDefault();
     if (!signUp) {
-      if (email && password) {
+      if (email && password.length < 6) {
+        toast.info("Password is min of 6 characters");
+      } else if (email && password) {
         const { user } = await signInWithEmailAndPassword(
           auth,
           email,
           password
-        );
+        ).catch((error) => {
+          // var errorCode = error.code;
+          var errorMessage = error.message;
+
+          toast.error(errorMessage);
+        });
         setUser(user);
         setActive("home");
       } else {
@@ -116,6 +121,7 @@ const Auth = ({ setActive, setUser }) => {
               <div className="col-12 py-3">
                 <input
                   type="password"
+                  minLength="6"
                   className="form-control input-text-box"
                   placeholder="Password"
                   name="password"
@@ -127,6 +133,7 @@ const Auth = ({ setActive, setUser }) => {
                 <div className="col-12 py-3">
                   <input
                     type="password"
+                    minLength="6"
                     className="form-control input-text-box"
                     placeholder="Confirm Password"
                     name="confirmPassword"

@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
-import { Tooltip } from "bootstrap";
+import React from "react";
+// import { Tooltip } from "bootstrap";
 
 const Like = ({ handleLike, likes, userId }) => {
-  useEffect(() => {
-    let tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    let tootipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new Tooltip(tooltipTriggerEl);
-    });
-  }, []);
+  // useEffect(() => {
+  //   let tooltipTriggerList = [].slice.call(
+  //     document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  //   );
+  //   let tootipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  //     return new Tooltip(tooltipTriggerEl);
+  //   });
+  // }, []);
 
   const LikeStatus = () => {
     if (likes?.length > 0) {

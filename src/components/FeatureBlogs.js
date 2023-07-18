@@ -4,7 +4,10 @@ import { excerpt } from "../utility";
 
 const FeatureBlogs = ({ blogs, title }) => {
   const navigate = useNavigate();
+  !blogs && <h5>No blogs available</h5>
   return (
+    
+    
     <div>
       <div className="blog-heading text-start pt-3 py-2 mb-4">{title}</div>
       {blogs?.map((item) => (

@@ -42,3 +42,8 @@
     font-size: 30px !important;
   }
 }
+@media (max-device-width: 705px) {
+  .single .blog-title-box .blog-title h2 {
+    font-size: 30px !important;
+  }
+}

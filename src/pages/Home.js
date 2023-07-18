@@ -20,7 +20,7 @@ import FeatureBlogs from "../components/FeatureBlogs";
 import Trending from "../components/Trending";
 import Search from "../components/Search";
 import { isEmpty, isNull } from "lodash";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Category from "../components/Category";
 
 function useQuery() {
@@ -30,6 +30,7 @@ function useQuery() {
 const Home = ({ setActive, user, active }) => {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState([]);
+  const [allBlogs, setAllBlogs] = useState([]);
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState("");
   const [lastVisible, setLastVisible] = useState(null);
@@ -90,6 +91,7 @@ const Home = ({ setActive, user, active }) => {
     const firstFour = query(blogRef, orderBy("title"), limit(4));
     const docSnapshot = await getDocs(firstFour);
     setBlogs(docSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    setAllBlogs(docSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     setLastVisible(docSnapshot.docs[docSnapshot.docs.length - 1]);
   };
 
@@ -131,7 +133,17 @@ const Home = ({ setActive, user, active }) => {
     );
     const titleSnapshot = await getDocs(searchTitleQuery);
     const tagSnapshot = await getDocs(searchTagQuery);
-
+    // -------------------   //
+    const getTitleBlogs = (query, blogs) => {
+      if (!query) {
+        return blogs;
+      }
+      return blogs.filter((blog) =>
+        blog.title.toLowerCase().includes(query.toLowerCase())
+      );
+    };
+    const titleQuerySnapshot = getTitleBlogs(searchQuery, allBlogs);
+    // -------------------   //
     let searchTitleBlogs = [];
     let searchTagBlogs = [];
     titleSnapshot.forEach((doc) => {
@@ -140,7 +152,8 @@ const Home = ({ setActive, user, active }) => {
     tagSnapshot.forEach((doc) => {
       searchTagBlogs.push({ id: doc.id, ...doc.data() });
     });
-    const combinedSearchBlogs = searchTitleBlogs.concat(searchTagBlogs);
+    // const combinedSearchBlogs = searchTitleBlogs.concat(searchTagBlogs);
+    const combinedSearchBlogs = titleQuerySnapshot.concat(searchTagBlogs);
     setBlogs(combinedSearchBlogs);
     setHide(true);
     setActive("");
@@ -203,7 +216,10 @@ const Home = ({ setActive, user, active }) => {
         <div className="row mx-0">
           <Trending blogs={trendBlogs} />
           <div className="col-md-8">
-            <div className="blog-heading text-start py-2 mb-4">Daily Blogs</div>
+            <div className="blog-heading text-start py-2 mb-4 d-flex justify-content-between align-items-center ">
+              Daily Blogs 
+              {searchQuery && <Link to="/" className="fs-6 link">Go home</Link>}
+            </div>
             <div className="d-block d-md-none">
               <Search hideTitle search={search} handleChange={handleChange} />
             </div>
@@ -236,7 +252,7 @@ const Home = ({ setActive, user, active }) => {
             </div>
             <div className="blog-heading text-start py-2 mb-4">Tags</div>
             <Tags tags={tags} />
-            <FeatureBlogs title={"Most Popular"} blogs={blogs} />
+            <FeatureBlogs title={"Most Popular"} blogs={allBlogs} />
             <Category catgBlogsCount={categoryCount} />
           </div>
         </div>
