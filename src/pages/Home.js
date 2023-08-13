@@ -20,7 +20,7 @@ import FeatureBlogs from "../components/FeatureBlogs";
 import Trending from "../components/Trending";
 import Search from "../components/Search";
 import { isEmpty, isNull } from "lodash";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Category from "../components/Category";
 
 function useQuery() {
@@ -30,6 +30,7 @@ function useQuery() {
 const Home = ({ setActive, user, active }) => {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState([]);
+  const [allBlogs, setAllBlogs] = useState([]);
   const [tags, setTags] = useState([]);
   const [search, setSearch] = useState("");
   const [lastVisible, setLastVisible] = useState(null);
@@ -53,7 +54,7 @@ const Home = ({ setActive, user, active }) => {
 
   useEffect(() => {
     getTrendingBlogs();
-    setSearch("");
+    // setSearch("");
     const unsub = onSnapshot(
       collection(db, "blogs"),
       (snapshot) => {
@@ -66,7 +67,6 @@ const Home = ({ setActive, user, active }) => {
         const uniqueTags = [...new Set(tags)];
         setTags(uniqueTags);
         setTotalBlogs(list);
-        // setBlogs(list);
         setLoading(false);
         setActive("home");
       },
@@ -88,14 +88,12 @@ const Home = ({ setActive, user, active }) => {
 
   const getBlogs = async () => {
     const blogRef = collection(db, "blogs");
-    console.log(blogRef);
     const firstFour = query(blogRef, orderBy("title"), limit(4));
     const docSnapshot = await getDocs(firstFour);
     setBlogs(docSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    setAllBlogs(docSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     setLastVisible(docSnapshot.docs[docSnapshot.docs.length - 1]);
   };
-
-  console.log("blogs", blogs);
 
   const updateState = (docSnapshot) => {
     const isCollectionEmpty = docSnapshot.size === 0;
@@ -135,7 +133,17 @@ const Home = ({ setActive, user, active }) => {
     );
     const titleSnapshot = await getDocs(searchTitleQuery);
     const tagSnapshot = await getDocs(searchTagQuery);
-
+    // -------------------   //
+    const getTitleBlogs = (query, blogs) => {
+      if (!query) {
+        return blogs;
+      }
+      return blogs.filter((blog) =>
+        blog.title.toLowerCase().includes(query.toLowerCase())
+      );
+    };
+    const titleQuerySnapshot = getTitleBlogs(searchQuery, allBlogs);
+    // -------------------   //
     let searchTitleBlogs = [];
     let searchTagBlogs = [];
     titleSnapshot.forEach((doc) => {
@@ -144,7 +152,8 @@ const Home = ({ setActive, user, active }) => {
     tagSnapshot.forEach((doc) => {
       searchTagBlogs.push({ id: doc.id, ...doc.data() });
     });
-    const combinedSearchBlogs = searchTitleBlogs.concat(searchTagBlogs);
+    // const combinedSearchBlogs = searchTitleBlogs.concat(searchTagBlogs);
+    const combinedSearchBlogs = titleQuerySnapshot.concat(searchTagBlogs);
     setBlogs(combinedSearchBlogs);
     setHide(true);
     setActive("");
@@ -154,6 +163,7 @@ const Home = ({ setActive, user, active }) => {
     if (!isNull(searchQuery)) {
       searchBlogs();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   if (loading) {
@@ -166,6 +176,7 @@ const Home = ({ setActive, user, active }) => {
         setLoading(true);
         await deleteDoc(doc(db, "blogs", id));
         toast.success("Blog deleted successfully");
+        getBlogs();
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -176,7 +187,6 @@ const Home = ({ setActive, user, active }) => {
   const handleChange = (e) => {
     const { value } = e.target;
     if (isEmpty(value)) {
-      console.log("test");
       getBlogs();
       setHide(false);
     }
@@ -190,7 +200,6 @@ const Home = ({ setActive, user, active }) => {
       prevValue[name] = 0;
     }
     prevValue[name]++;
-    // delete prevValue["undefined"];
     return prevValue;
   }, {});
 
@@ -201,15 +210,19 @@ const Home = ({ setActive, user, active }) => {
     };
   });
 
-  console.log("categoryCount", categoryCount);
-
   return (
     <div className="container-fluid pb-4 pt-4 padding">
       <div className="container padding">
         <div className="row mx-0">
           <Trending blogs={trendBlogs} />
           <div className="col-md-8">
-            <div className="blog-heading text-start py-2 mb-4">Daily Blogs</div>
+            <div className="blog-heading text-start py-2 mb-4 d-flex justify-content-between align-items-center ">
+              Daily Blogs 
+              {searchQuery && <Link to="/" className="fs-6 link">Go home</Link>}
+            </div>
+            <div className="d-block d-md-none">
+              <Search hideTitle search={search} handleChange={handleChange} />
+            </div>
             {blogs.length === 0 && location.pathname !== "/" && (
               <>
                 <h4>
@@ -234,10 +247,12 @@ const Home = ({ setActive, user, active }) => {
             )}
           </div>
           <div className="col-md-3">
-            <Search search={search} handleChange={handleChange} />
+            <div className="d-none d-md-block">
+              <Search search={search} handleChange={handleChange} />
+            </div>
             <div className="blog-heading text-start py-2 mb-4">Tags</div>
             <Tags tags={tags} />
-            <FeatureBlogs title={"Most Popular"} blogs={blogs} />
+            <FeatureBlogs title={"Most Popular"} blogs={allBlogs} />
             <Category catgBlogsCount={categoryCount} />
           </div>
         </div>

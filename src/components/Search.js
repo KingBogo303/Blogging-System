@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Search = ({ search, handleChange }) => {
+const Search = ({ search, handleChange, hideTitle }) => {
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -15,14 +15,14 @@ const Search = ({ search, handleChange }) => {
 
   return (
     <div>
-      <div className="blog-heading text-start py-2 mb-4">Search</div>
+      {!hideTitle && <div className="blog-heading text-start py-2 mb-4">Search</div>}
       <form className="form-inline" onSubmit={handleSubmit}>
         <div className="col-12 py-3">
           <input
-            type="text"
+            type="search"
             value={search}
             className="form-control search-input"
-            placeholder="Search blog"
+            placeholder="Search blog by title or tag"
             onChange={handleChange}
           />
         </div>

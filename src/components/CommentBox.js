@@ -1,8 +1,19 @@
 import React from "react";
+import { useEffect } from "react";
+// import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CommentBox = ({ userId, userComment, setUserComment, handleComment }) => {
   const navigate = useNavigate();
+
+  // const [remainingWords, setRemainingWords] = useState();
+
+  // useEffect(() => {
+  //   setRemainingWords(50 - (userComment.trim().length))
+  // }, [userComment])
+
+  useEffect(() => {}, []);
+
   return (
     <>
       <form className="row blog-form">
@@ -13,6 +24,11 @@ const CommentBox = ({ userId, userComment, setUserComment, handleComment }) => {
             onChange={(e) => setUserComment(e.target.value)}
             className="form-control description"
           />
+          {
+            // userComment.length < 50 ?
+            //   (<small>{`Number of characters remaining: ${remainingWords}`}</small>) :
+            //   ""
+          }
         </div>
       </form>
       {!userId ? (

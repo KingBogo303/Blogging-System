@@ -3,7 +3,7 @@ import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { db, storage } from "../firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   addDoc,
   collection,
@@ -35,8 +35,8 @@ const categoryOption = [
 
 const AddEditBlog = ({ user, setActive }) => {
   const [form, setForm] = useState(initialState);
+  const [imgAvail, setImgAvail] = useState(null);
   const [file, setFile] = useState(null);
-  const [progress, setProgress] = useState(null);
 
   const { id } = useParams();
 
@@ -46,36 +46,17 @@ const AddEditBlog = ({ user, setActive }) => {
 
   useEffect(() => {
     const uploadFile = () => {
+      setImgAvail(false)
       const storageRef = ref(storage, file.name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setProgress(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-            toast.info("Image upload to firebase successfully");
-            setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
-          });
-        }
-      );
+      uploadBytes(storageRef, file).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((downloadUrl) => {
+          toast.info("Image upload to firebase successfully");
+          setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
+        });
+        setImgAvail(true)
+
+      })
+     
     };
 
     file && uploadFile();
@@ -155,13 +136,14 @@ const AddEditBlog = ({ user, setActive }) => {
           </div>
         </div>
         <div className="row h-100 justify-content-center align-items-center">
-          <div className="col-10 col-md-8 col-lg-6">
+          <div className="col-10 col-md-8 ">
             <form className="row blog-form" onSubmit={handleSubmit}>
               <div className="col-12 py-3">
                 <input
                   type="text"
                   className="form-control input-text-box"
                   placeholder="Title"
+                  required
                   name="title"
                   value={title}
                   onChange={handleChange}
@@ -170,7 +152,7 @@ const AddEditBlog = ({ user, setActive }) => {
               <div className="col-12 py-3">
                 <ReactTagInput
                   tags={tags}
-                  placeholder="Tags"
+                  placeholder="Tags eg. Mythology, Gaming, beauty"
                   onChange={handleTags}
                 />
               </div>
@@ -184,8 +166,9 @@ const AddEditBlog = ({ user, setActive }) => {
                     name="radioOption"
                     checked={trending === "yes"}
                     onChange={handleTrending}
+                    id="radioOption1"
                   />
-                  <label htmlFor="radioOption" className="form-check-label">
+                  <label htmlFor="radioOption1" className="form-check-label">
                     Yes&nbsp;
                   </label>
                   <input
@@ -195,8 +178,9 @@ const AddEditBlog = ({ user, setActive }) => {
                     name="radioOption"
                     checked={trending === "no"}
                     onChange={handleTrending}
+                    id="radioOption2"
                   />
-                  <label htmlFor="radioOption" className="form-check-label">
+                  <label htmlFor="radioOption2" className="form-check-label">
                     No
                   </label>
                 </div>
@@ -204,6 +188,7 @@ const AddEditBlog = ({ user, setActive }) => {
               <div className="col-12 py-3">
                 <select
                   value={category}
+                  required
                   onChange={onCategoryChange}
                   className="catg-dropdown"
                 >
@@ -217,6 +202,7 @@ const AddEditBlog = ({ user, setActive }) => {
               </div>
               <div className="col-12 py-3">
                 <textarea
+                required
                   className="form-control description-box"
                   placeholder="Description"
                   value={description}
@@ -228,6 +214,7 @@ const AddEditBlog = ({ user, setActive }) => {
                 <input
                   type="file"
                   className="form-control"
+                  required={id? false : true}
                   onChange={(e) => setFile(e.target.files[0])}
                 />
               </div>
@@ -235,7 +222,7 @@ const AddEditBlog = ({ user, setActive }) => {
                 <button
                   className="btn btn-add"
                   type="submit"
-                  disabled={progress !== null && progress < 100}
+                  disabled={imgAvail === false}
                 >
                   {id ? "Update" : "Submit"}
                 </button>

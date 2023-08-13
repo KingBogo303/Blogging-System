@@ -2,8 +2,10 @@ import React from "react";
 
 const Spinner = () => {
   return (
-    <div className="spinner-border text-primary mt-5 spinner" role="status">
+    <div className="d-flex justify-content-center">
+    <div className="spinner-border text-primary mt-5 spinner text-center  " role="status">
       <span className="visually-hidden">Loading...</span>
+    </div>
     </div>
   );
 };

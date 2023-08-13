@@ -88,6 +88,10 @@ const Detail = ({ setActive, user }) => {
   };
 
   const handleComment = async (e) => {
+    if (userComment.trim().length < 1) {
+      toast.error("Enter text for comment");
+      return;
+    }
     e.preventDefault();
     comments.push({
       createdAt: Timestamp.fromDate(new Date()),
@@ -125,13 +129,29 @@ const Detail = ({ setActive, user }) => {
     }
   };
 
-  console.log("relatedBlogs", relatedBlogs);
+  // ---------------- funtion for scroll indicator ----------------------//
+  window.onscroll = () => {
+    var winScroll =
+      document.body.scrollTop || document.documentElement.scrollTop;
+    var height =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    var scrolled = (winScroll / height) * 100;
+    document.getElementById("myBar").style.width = scrolled + "%";
+  };
+
   return (
     <div className="single">
+      <div class="scroll-header">
+        <div class="progress-container">
+          <div class="progress-bar" id="myBar"></div>
+        </div>
+      </div>
       <div
         className="blog-title-box"
-        style={{ backgroundImage: `url('${blog?.imgUrl}')` }}
+        // style={{ backgroundImage: `url('${blog?.imgUrl}')` }}
       >
+        <img src={`${blog?.imgUrl}`} className="dImg" alt="" />
         <div className="overlay"></div>
         <div className="blog-title">
           <span>{blog?.timestamp.toDate().toDateString()}</span>
@@ -163,8 +183,8 @@ const Detail = ({ setActive, user }) => {
                     />
                   ) : (
                     <>
-                      {comments?.map((comment) => (
-                        <UserComments {...comment} />
+                      {comments?.map((comment, idx) => (
+                        <UserComments key={idx} {...comment} />
                       ))}
                     </>
                   )}

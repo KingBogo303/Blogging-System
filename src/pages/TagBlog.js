@@ -1,14 +1,20 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import BlogSection from "../components/BlogSection";
 import Spinner from "../components/Spinner";
 import { db } from "../firebase";
 
-const TagBlog = ({setActive}) => {
+const TagBlog = ({ setActive }) => {
   const [tagBlogs, setTagBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const { tag } = useParams();
+
+  const navigate = useNavigate()
+
+  const goback =()=>{
+    navigate(-1)
+  }
 
   const getTagBlogs = async () => {
     setLoading(true);
@@ -37,7 +43,11 @@ const TagBlog = ({setActive}) => {
     <div>
       <div className="container">
         <div className="row">
-          <div className="blog-heading text-center py-2 mb-4">
+          <div className="blog-heading text-center py-2 mb-4 align-items-center">
+            <i class="bi bi-arrow-left-circle fs-3" onClick={goback} title="Go back" style={{
+              float: "left",
+              cursor: "pointer",
+            }}></i>
             Tag: <strong>{tag.toLocaleUpperCase()}</strong>
           </div>
           {tagBlogs?.map((item) => (

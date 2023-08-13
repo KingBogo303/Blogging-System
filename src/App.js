@@ -19,7 +19,11 @@ import CategoryBlog from "./pages/CategoryBlog";
 import ScrollToTop from "./components/ScrollToTop";
 import Blogs from "./pages/Blogs";
 import Dictaphone from "./components/Dictaphone";
+<<<<<<< HEAD
 import Main from "./components/AMAIN";
+=======
+import Dictaphone1 from "./components/Dictaphone1";
+>>>>>>> 44c6d5f6b890902dc92e39779f84e3a675b4b62a
 
 function App() {
   const [active, setActive] = useState("home");
@@ -71,7 +75,7 @@ function App() {
         <Route
           path="/create"
           element={
-            user?.uid ? <AddEditBlog user={user} /> : <Navigate to="/" />
+            user?.uid ? <AddEditBlog user={user} /> : <Navigate to="/auth" />
           }
         />
         <Route
@@ -88,6 +92,11 @@ function App() {
         <Route path="/dictaphone" element={<Dictaphone />} />
         <Route path="/testSpeech" element={<Main />} />
         <Route path="/tag/:tag" element={<TagBlog setActive={setActive} />} />
+<<<<<<< HEAD
+=======
+        <Route path="/speech" element={<Dictaphone />} />
+        <Route path="/speech1" element={<Dictaphone1 />} />
+>>>>>>> 44c6d5f6b890902dc92e39779f84e3a675b4b62a
         <Route
           path="/category/:category"
           element={<CategoryBlog setActive={setActive} />}
@@ -95,7 +104,13 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route
           path="/auth"
-          element={<Auth setActive={setActive} setUser={setUser} />}
+          element={
+            user?.uid ? (
+              <Navigate to="/" />
+            ) : (
+              <Auth setActive={setActive} setUser={setUser} />
+            )
+          }
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
