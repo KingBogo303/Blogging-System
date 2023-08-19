@@ -14,15 +14,15 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { toast } from "react-toastify";
-import Dictaphone from "../components/Dictaphone";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 const initialState = {
   title: "",
   tags: [],
   trending: "no",
   category: "",
-  text,
-  // description: "",
   comments: [],
   likes: [],
 };
@@ -37,15 +37,39 @@ const categoryOption = [
 ];
 
 const AddEditBlog = ({ user, setActive }) => {
+  const [text, setText] = useState("");
   const [form, setForm] = useState(initialState);
   const [imgAvail, setImgAvail] = useState(null);
   const [file, setFile] = useState(null);
+  const [isMic, setIsMic] = useState();
+
+  // ---------- dictaphone  ------------//
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    setIsMic(false);
+  }
+
+  const listen = () => SpeechRecognition.startListening();
+  const stopListening = () => SpeechRecognition.stopListening();
+
+  useEffect(() => {
+    setText((prev) => prev + " " + transcript);
+  }, [transcript]);
+  // ---------- dictaphone ------------//
+
+  console.log(text);
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const { title, tags, category, trending, description } = form;
+  const { title, tags, category, trending } = form;
 
   useEffect(() => {
     const uploadFile = () => {
@@ -95,11 +119,12 @@ const AddEditBlog = ({ user, setActive }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (category && tags && title && description && trending) {
+    if (category && tags && title && text && trending) {
       if (!id) {
         try {
           await addDoc(collection(db, "blogs"), {
             ...form,
+            description: text,
             timestamp: serverTimestamp(),
             author: user.displayName,
             userId: user.uid,
@@ -204,14 +229,31 @@ const AddEditBlog = ({ user, setActive }) => {
               <div className="col-12 py-3">
                 <textarea
                   required
-                  className="form-control description-box"
+                  className="form-control description-box mb-1"
                   placeholder="Description"
                   value={text}
                   name="description"
-                  onChange={handleChange}
+                  onChange={(e) => setText(e.target.value)}
                 />
-                <p style={{ cursor: "pointer" }} onClick={listen}>
-                  Listen
+                <p
+                  title={listening ? "stop recording" : "start recording"}
+                  className="btn btn-secondary fs-5 rounded-circle d-flex justify-content-center align-items-center"
+                  style={{
+                    cursor: "pointer",
+                    width: "40px",
+                    height: "40px",
+                    margin: "0 auto",
+                  }}
+                  // onClick={() => (listening ? listen : stopListening)}
+                >
+                  {listening ? (
+                    <i
+                      className="bi bi-mic-mute-fill "
+                      onClick={stopListening}
+                    ></i>
+                  ) : (
+                    <i className="bi bi-mic-fill " onClick={listen}></i>
+                  )}
                 </p>
               </div>
               <div className="mb-3">
