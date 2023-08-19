@@ -41,7 +41,7 @@ const CategoryBlog = ({ setActive }) => {
             Category: <strong>{category.toLocaleUpperCase()}</strong>
           </div>
           {categoryBlogs?.map((item) => (
-            <div className="col-md-6">
+            <div className="col-md-6" key={item.id}>
               <BlogSection key={item.id} {...item} />
             </div>
           ))}

@@ -142,9 +142,9 @@ const Detail = ({ setActive, user }) => {
 
   return (
     <div className="single">
-      <div class="scroll-header">
-        <div class="progress-container">
-          <div class="progress-bar" id="myBar"></div>
+      <div className="scroll-header">
+        <div className="progress-container">
+          <div className="progress-bar" id="myBar"></div>
         </div>
       </div>
       <div
