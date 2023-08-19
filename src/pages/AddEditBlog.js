@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { db, storage } from "../firebase";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { listen, text } from "../components/Dictaphone";
 import {
   addDoc,
   collection,
@@ -40,6 +39,7 @@ const AddEditBlog = ({ user, setActive }) => {
   const [text, setText] = useState("");
   const [form, setForm] = useState(initialState);
   const [imgAvail, setImgAvail] = useState(null);
+  const [imgExist, setImgExist] = useState(null);
   const [file, setFile] = useState(null);
   const [isMic, setIsMic] = useState();
 
@@ -80,7 +80,9 @@ const AddEditBlog = ({ user, setActive }) => {
           toast.info("Image upload to firebase successfully");
           setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
         });
-        setImgAvail(true);
+        setTimeout(() => {
+          setImgAvail(true);
+        }, 2000);
       });
     };
 
@@ -96,6 +98,10 @@ const AddEditBlog = ({ user, setActive }) => {
     const docRef = doc(db, "blogs", id);
     const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {
+      setImgExist(true);
+      let data = { ...snapshot.data() };
+      const { description } = data;
+      setText(description);
       setForm({ ...snapshot.data() });
     }
     setActive(null);
@@ -137,6 +143,7 @@ const AddEditBlog = ({ user, setActive }) => {
         try {
           await updateDoc(doc(db, "blogs", id), {
             ...form,
+            description: text,
             timestamp: serverTimestamp(),
             author: user.displayName,
             userId: user.uid,
@@ -270,7 +277,7 @@ const AddEditBlog = ({ user, setActive }) => {
                   type="submit"
                   disabled={imgAvail === false}
                 >
-                  {id ? "Update" : "Submit"}
+                  {id ? "Update" : "Publish"}
                 </button>
               </div>
             </form>
