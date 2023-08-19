@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { db, storage } from "../firebase";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { listen, text } from "../components/Dictaphone";
 import {
   addDoc,
   collection,
@@ -13,15 +14,17 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { toast } from "react-toastify";
+import Dictaphone from "../components/Dictaphone";
 
 const initialState = {
   title: "",
   tags: [],
   trending: "no",
   category: "",
-  description: "",
+  text,
+  // description: "",
   comments: [],
-  likes: []
+  likes: [],
 };
 
 const categoryOption = [
@@ -46,17 +49,15 @@ const AddEditBlog = ({ user, setActive }) => {
 
   useEffect(() => {
     const uploadFile = () => {
-      setImgAvail(false)
+      setImgAvail(false);
       const storageRef = ref(storage, file.name);
       uploadBytes(storageRef, file).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((downloadUrl) => {
           toast.info("Image upload to firebase successfully");
           setForm((prev) => ({ ...prev, imgUrl: downloadUrl }));
         });
-        setImgAvail(true)
-
-      })
-     
+        setImgAvail(true);
+      });
     };
 
     file && uploadFile();
@@ -202,19 +203,22 @@ const AddEditBlog = ({ user, setActive }) => {
               </div>
               <div className="col-12 py-3">
                 <textarea
-                required
+                  required
                   className="form-control description-box"
                   placeholder="Description"
-                  value={description}
+                  value={text}
                   name="description"
                   onChange={handleChange}
                 />
+                <p style={{ cursor: "pointer" }} onClick={listen}>
+                  Listen
+                </p>
               </div>
               <div className="mb-3">
                 <input
                   type="file"
                   className="form-control"
-                  required={id? false : true}
+                  required={id ? false : true}
                   onChange={(e) => setFile(e.target.files[0])}
                 />
               </div>

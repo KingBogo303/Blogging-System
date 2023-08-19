@@ -16,7 +16,7 @@ const Trending = ({ blogs }) => {
       480: {
         items: 2,
       },
-      600: {
+      770: {
         items: 3,
       },
       1000: {
