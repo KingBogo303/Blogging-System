@@ -73,21 +73,29 @@ const Header = ({ active, setActive, user, handleLogout }) => {
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                   {userId ? (
                     <>
-                      <div className="profile-logo">
-                        <img
-                          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                          alt="logo"
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            marginTop: "12px",
-                          }}
-                        />
-                      </div>
-                      <p style={{ marginTop: "12px", marginLeft: "5px" }}>
-                        {user?.displayName}
-                      </p>
+                      <Link
+                        to={`profile/${userId}`}
+                        onClick={() => setActive("profile")}
+                        className={`btn btn-outline-warning d-flex justify-content-center nav-item nav-link ${
+                          active === "profile" ? "active" : ""
+                        }`}
+                      >
+                        <div className="profile-logo">
+                          <img
+                            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                            alt="logo"
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              borderRadius: "50%",
+                              marginTop: "12px",
+                            }}
+                          />
+                        </div>
+                        <p style={{ marginTop: "12px", marginLeft: "5px" }}>
+                          {user?.displayName}
+                        </p>
+                      </Link>
                       <li className="nav-item nav-link" onClick={handleLogout}>
                         Logout
                       </li>

@@ -18,6 +18,7 @@ import TagBlog from "./pages/TagBlog";
 import CategoryBlog from "./pages/CategoryBlog";
 import ScrollToTop from "./components/ScrollToTop";
 import Blogs from "./pages/Blogs";
+import Profile from "./pages/Profile";
 
 function App() {
   const [active, setActive] = useState("home");
@@ -85,6 +86,10 @@ function App() {
         />
         <Route path="/blogs" element={<Blogs setActive={setActive} />} />
         <Route path="/tag/:tag" element={<TagBlog setActive={setActive} />} />
+        <Route
+          path="/profile/:id"
+          element={user?.uid ? <Profile user={user} /> : <Navigate to="/" />}
+        />
         <Route
           path="/category/:category"
           element={<CategoryBlog setActive={setActive} />}

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { excerpt, firstName } from "../utility";
 
 const BlogSection = ({
+  length,
   id,
   title,
   description,
@@ -36,7 +37,7 @@ const BlogSection = ({
             </span>
           </div>
           <div className="short-description text-start">
-            {excerpt(description, 40)}
+            {excerpt(description, length ? length : 40)}
           </div>
           <Link to={`/detail/${id}`}>
             <button className="btn btn-read">Read More</button>
