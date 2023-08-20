@@ -23,6 +23,7 @@ import Tags from "../components/Tags";
 import UserComments from "../components/UserComments";
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
+import TextToSpeech from "../utility/TextToSpeech";
 
 const Detail = ({ setActive, user }) => {
   const userId = user?.uid;
@@ -137,7 +138,7 @@ const Detail = ({ setActive, user }) => {
       document.documentElement.scrollHeight -
       document.documentElement.clientHeight;
     var scrolled = (winScroll / height) * 100;
-    document.getElementById("myBar").style.width = scrolled + "%";
+    // document.getElementById("myBar").style.width = scrolled + "%";
   };
 
   return (
@@ -147,10 +148,7 @@ const Detail = ({ setActive, user }) => {
           <div className="progress-bar" id="myBar"></div>
         </div>
       </div>
-      <div
-        className="blog-title-box"
-        // style={{ backgroundImage: `url('${blog?.imgUrl}')` }}
-      >
+      <div className="blog-title-box">
         <img src={`${blog?.imgUrl}`} className="dImg" alt="" />
         <div className="overlay"></div>
         <div className="blog-title">
@@ -160,13 +158,23 @@ const Detail = ({ setActive, user }) => {
       </div>
       <div className="container-fluid pb-4 pt-4 padding blog-single-content">
         <div className="container padding">
-          <div className="row mx-0">
+          <div className="row mx-0 gap-1">
             <div className="col-md-8">
-              <span className="meta-info text-start">
-                By <p className="author">{blog?.author}</p> -&nbsp;
-                {blog?.timestamp.toDate().toDateString()}
-                <Like handleLike={handleLike} likes={likes} userId={userId} />
+              <span className="meta-info text-start row">
+                <div className="col-sm-8">
+                  By <p className="author">{blog?.author}</p> -&nbsp;
+                  {blog?.timestamp.toDate().toDateString()}
+                </div>
+                <div className="col-sm-4 mb-2">
+                  <Like handleLike={handleLike} likes={likes} userId={userId} />
+                </div>
               </span>
+              <div>
+                <TextToSpeech
+                  style={{ borderleft: "2px solid #eee" }}
+                  text={blog?.description}
+                />
+              </div>
               <p className="text-start">{blog?.description}</p>
               <div className="text-start">
                 <Tags tags={blog?.tags} />

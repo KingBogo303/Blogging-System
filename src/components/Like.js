@@ -34,10 +34,7 @@ const Like = ({ handleLike, likes, userId }) => {
   };
   return (
     <>
-      <span
-        style={{ float: "right", cursor: "pointer", marginTop: "-7px" }}
-        onClick={!userId ? null : handleLike}
-      >
+      <span style={{ cursor: "pointer" }} onClick={!userId ? null : handleLike}>
         {!userId ? (
           <button
             type="button"

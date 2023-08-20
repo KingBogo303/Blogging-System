@@ -15,7 +15,6 @@ const BlogSection = ({
   user,
   handleDelete,
 }) => {
-  
   return (
     <div>
       <div className="row  py-3 shadow-sm my-3 mx-1 p-2" key={id}>
@@ -30,17 +29,14 @@ const BlogSection = ({
         <div className="col-md-7">
           <div className="text-start">
             <h6 className="category catg-color">{category}</h6>
-            <span className="title py-2" >
-              {/* {title}  */}
-              {excerpt(title, 23)}
-              </span>
+            <span className="title py-2">{excerpt(title, 23)}</span>
             <span className="meta-info">
               <p className="author">{firstName(author)}</p> -&nbsp;
               {timestamp.toDate().toDateString()}
             </span>
           </div>
           <div className="short-description text-start">
-            {excerpt(description, 70)}
+            {excerpt(description, 40)}
           </div>
           <Link to={`/detail/${id}`}>
             <button className="btn btn-read">Read More</button>

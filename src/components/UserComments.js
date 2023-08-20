@@ -8,14 +8,15 @@ const UserComments = ({ name, body, createdAt, msg }) => {
           <div className="comments-list">
             <div className="media">
               {msg ? (
-                <h4 className="mt-5">{msg}</h4>
+                <h5 className="mt-5 fs-6">{msg}</h5>
               ) : (
                 <>
-                  <div className="media-left">
+                  <div className="media-left w-auto m-0">
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
                       alt="user"
                       className="rounded-circle"
+                      width="50px"
                     />
                   </div>
                   <div className="media-body">

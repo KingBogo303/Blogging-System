@@ -353,6 +353,7 @@ $yellow: #f5bc04;
   p,
   ul li {
     font-size: 1.05rem;
+    font-size: 0.9rem;
   }
 }
 
@@ -597,7 +598,7 @@ $yellow: #f5bc04;
 
 .custombox {
   position: relative;
-  padding: 3rem 2rem;
+  padding: 1.5rem 0.5rem;
   border: 1px dashed #dadada;
   margin-top: 20px;
 }
@@ -646,7 +647,7 @@ $yellow: #f5bc04;
 
 .comments-list img {
   max-width: 80px;
-  margin-right: 30px;
+  margin-right: 15px;
 }
 
 .small-title {
@@ -666,7 +667,7 @@ $yellow: #f5bc04;
 }
 
 .user_name {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 }
 

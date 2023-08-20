@@ -3,6 +3,7 @@ import OwlCarousel from "react-owl-carousel";
 import { Link } from "react-router-dom";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
+import { excerpt } from "../utility";
 
 const Trending = ({ blogs }) => {
   const options = {
@@ -43,7 +44,10 @@ const Trending = ({ blogs }) => {
                 </div>
                 <div className="trending-img-absolute"></div>
                 <div className="trending-img-absolute-1">
-                  <span className="text-white">{item.title}</span>
+                  <span className="text-white">
+                    {/* {item.title} */}
+                    {excerpt(item.title, 28)}
+                  </span>
                   <div className="trending-meta-info">
                     {item.author} - {item.timestamp.toDate().toDateString()}
                   </div>
