@@ -19,6 +19,7 @@ import CategoryBlog from "./pages/CategoryBlog";
 import ScrollToTop from "./components/ScrollToTop";
 import Blogs from "./pages/Blogs";
 import Profile from "./pages/Profile";
+import Test from "./components/Test";
 
 function App() {
   const [active, setActive] = useState("home");
@@ -85,6 +86,7 @@ function App() {
           s
         />
         <Route path="/blogs" element={<Blogs setActive={setActive} />} />
+        <Route path="/q" element={<Test />} />
         <Route path="/tag/:tag" element={<TagBlog setActive={setActive} />} />
         <Route
           path="/profile/:id"

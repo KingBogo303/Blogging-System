@@ -9,7 +9,7 @@ import {
   Timestamp,
   updateDoc,
   orderBy,
-  where,
+  // where,
 } from "firebase/firestore";
 import { isEmpty } from "lodash";
 import React, { useState, useEffect } from "react";
@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 import CommentBox from "../components/CommentBox";
 import Like from "../components/Like";
 import FeatureBlogs from "../components/FeatureBlogs";
-import RelatedBlog from "../components/RelatedBlog";
+// import RelatedBlog from "../components/RelatedBlog";
 import Tags from "../components/Tags";
 import UserComments from "../components/UserComments";
 import { db } from "../firebase";
@@ -36,7 +36,7 @@ const Detail = ({ setActive, user }) => {
   const [comments, setComments] = useState([]);
   let [likes, setLikes] = useState([]);
   const [userComment, setUserComment] = useState("");
-  const [relatedBlogs, setRelatedBlogs] = useState([]);
+  // const [relatedBlogs, setRelatedBlogs] = useState([]);
 
   useEffect(() => {
     const getRecentBlogs = async () => {
@@ -73,18 +73,18 @@ const Detail = ({ setActive, user }) => {
     let uniqueTags = [...new Set(tags)];
     setTags(uniqueTags);
     setBlog(blogDetail.data());
-    const relatedBlogsQuery = query(
-      blogRef,
-      where("tags", "array-contains-any", blogDetail.data().tags, limit(3))
-    );
+    // const relatedBlogsQuery = query(
+    //   blogRef,
+    //   where("tags", "array-contains-any", blogDetail.data().tags, limit(3))
+    // );
     setComments(blogDetail.data().comments ? blogDetail.data().comments : []);
     setLikes(blogDetail.data().likes ? blogDetail.data().likes : []);
-    const relatedBlogSnapshot = await getDocs(relatedBlogsQuery);
-    const relatedBlogs = [];
-    relatedBlogSnapshot.forEach((doc) => {
-      relatedBlogs.push({ id: doc.id, ...doc.data() });
-    });
-    setRelatedBlogs(relatedBlogs);
+    // const relatedBlogSnapshot = await getDocs(relatedBlogsQuery);
+    // const relatedBlogs = [];
+    // relatedBlogSnapshot.forEach((doc) => {
+    //   relatedBlogs.push({ id: doc.id, ...doc.data() });
+    // });
+    // setRelatedBlogs(relatedBlogs);
     setActive(null);
     setLoading(false);
   };
@@ -218,7 +218,7 @@ const Detail = ({ setActive, user }) => {
               <FeatureBlogs title={"Recent Blogs"} blogs={blogs} />
             </div>
           </div>
-          <RelatedBlog id={id} blogs={relatedBlogs} />
+          {/* <RelatedBlog id={id} blogs={relatedBlogs} /> */}
         </div>
       </div>
     </div>

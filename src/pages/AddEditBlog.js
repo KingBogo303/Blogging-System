@@ -46,7 +46,7 @@ const AddEditBlog = ({ user, setActive }) => {
   const [isMic, setIsMic] = useState();
 
   // ---------- dictaphone  ------------//
-  const { transcript, listening, browserSupportsSpeechRecognition } =
+  const { transcript, resetTranscript, listening, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
 
   if (!browserSupportsSpeechRecognition) {
@@ -58,7 +58,10 @@ const AddEditBlog = ({ user, setActive }) => {
 
   useEffect(() => {
     setText((prev) => prev + " " + transcript);
-  }, [transcript]);
+    if(!listening){
+      resetTranscript()
+    }
+  }, [listening]);
   // ---------- dictaphone ------------//
 
   const { id } = useParams();
@@ -256,7 +259,7 @@ const AddEditBlog = ({ user, setActive }) => {
                   required
                   className="form-control description-box mb-1"
                   placeholder="Description"
-                  value={text}
+                  value={text + transcript}
                   name="description"
                   onChange={(e) => setText(e.target.value)}
                 />
