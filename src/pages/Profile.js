@@ -37,8 +37,6 @@ const Profile = ({ user }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(id);
-
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure wanted to delete that blog ?")) {
       try {
@@ -60,30 +58,29 @@ const Profile = ({ user }) => {
   return (
     <div className="container">
       <div className="blog-heading text-center py-2 mb-3">My Information</div>
-      <form class="row g-3 mb-5">
-        {console.log(user)}
-        <div class="col-md-6">
-          <label for="inputEmail4 " class="form-label">
+      <form className="row g-3 mb-5">
+        <div className="col-md-6">
+          <label htmlFor="dName " className="form-label">
             Display Name
           </label>
           <input
             disabled
             type="text"
-            class="form-control"
+            className="form-control"
             defaultValue={user.displayName}
-            id="inputEmail4"
+            id="dName"
           />
         </div>
-        <div class="col-md-6">
-          <label for="inputEmail4 " class="form-label">
+        <div className="col-md-6">
+          <label htmlFor="email " className="form-label">
             Email
           </label>
           <input
             disabled
             type="email"
-            class="form-control"
+            className="form-control"
             defaultValue={user.email}
-            id="inputEmail4"
+            id="email"
           />
         </div>
       </form>{" "}
@@ -91,9 +88,8 @@ const Profile = ({ user }) => {
         <div className="row">
           <div className="blog-heading text-center py-2 mb-3">My Blogs</div>
           {userBlogs?.map((blog) => (
-            <div>
+            <div key={blog.id}>
               <BlogSection
-                key={blog.id}
                 user={user}
                 handleDelete={handleDelete}
                 {...blog}

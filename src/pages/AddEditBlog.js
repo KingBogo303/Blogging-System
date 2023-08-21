@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { moderateContent } from "../utility/ContentModerate";
 
 const initialState = {
   title: "",
@@ -37,6 +38,7 @@ const categoryOption = [
 
 const AddEditBlog = ({ user, setActive }) => {
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(initialState);
   const [imgAvail, setImgAvail] = useState(null);
   const [imgExist, setImgExist] = useState(null);
@@ -44,12 +46,8 @@ const AddEditBlog = ({ user, setActive }) => {
   const [isMic, setIsMic] = useState();
 
   // ---------- dictaphone  ------------//
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+  const { transcript, listening, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   if (!browserSupportsSpeechRecognition) {
     setIsMic(false);
@@ -62,8 +60,6 @@ const AddEditBlog = ({ user, setActive }) => {
     setText((prev) => prev + " " + transcript);
   }, [transcript]);
   // ---------- dictaphone ------------//
-
-  console.log(text);
 
   const { id } = useParams();
 
@@ -124,8 +120,22 @@ const AddEditBlog = ({ user, setActive }) => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     if (category && tags && title && text && trending) {
+      // -------------------- //
+      const titleFlagged = await moderateContent(title);
+      const descriptionFlagged = await moderateContent(text);
+      if (titleFlagged) {
+        toast.error("Your title does not meet language standard");
+        setLoading(false);
+        return;
+      }
+      if (descriptionFlagged) {
+        toast.error("Your description does not meet language standard");
+        setLoading(false);
+        return;
+      }
       if (!id) {
         try {
           await addDoc(collection(db, "blogs"), {
@@ -135,9 +145,12 @@ const AddEditBlog = ({ user, setActive }) => {
             author: user.displayName,
             userId: user.uid,
           });
+          setLoading(false);
           toast.success("Blog created successfully");
         } catch (err) {
           console.log(err);
+          setLoading(false);
+          toast.error("An error occured");
         }
       } else {
         try {
@@ -148,15 +161,20 @@ const AddEditBlog = ({ user, setActive }) => {
             author: user.displayName,
             userId: user.uid,
           });
+          setLoading(false);
           toast.success("Blog updated successfully");
         } catch (err) {
           console.log(err);
+          setLoading(false);
+          toast.error("An error occured");
         }
       }
+      //  --------------------- //
     } else {
+      setLoading(false);
       return toast.error("All fields are mandatory to fill");
     }
-
+    setLoading(false);
     navigate("/");
   };
 
@@ -251,7 +269,6 @@ const AddEditBlog = ({ user, setActive }) => {
                     height: "40px",
                     margin: "0 auto",
                   }}
-                  // onClick={() => (listening ? listen : stopListening)}
                 >
                   {listening ? (
                     <i
@@ -270,15 +287,28 @@ const AddEditBlog = ({ user, setActive }) => {
                   required={id ? false : true}
                   onChange={(e) => setFile(e.target.files[0])}
                 />
+                {imgExist && (
+                  <small>Image exist. Click if you wish to replace image</small>
+                )}
               </div>
               <div className="col-12 py-3 text-center">
-                <button
-                  className="btn btn-add"
-                  type="submit"
-                  disabled={imgAvail === false}
-                >
-                  {id ? "Update" : "Publish"}
-                </button>
+                {id ? (
+                  <button
+                    className="btn btn-add"
+                    type="submit"
+                    disabled={imgAvail === false || loading}
+                  >
+                    {loading ? "Updating..." : "Update"}
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-add"
+                    type="submit"
+                    disabled={imgAvail === false || loading}
+                  >
+                    {loading ? "Publishing..." : "Publish"}
+                  </button>
+                )}
               </div>
             </form>
           </div>

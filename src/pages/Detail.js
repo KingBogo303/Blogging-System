@@ -24,6 +24,7 @@ import UserComments from "../components/UserComments";
 import { db } from "../firebase";
 import Spinner from "../components/Spinner";
 import TextToSpeech from "../utility/TextToSpeech";
+import { moderateContent } from "../utility/ContentModerate";
 
 const Detail = ({ setActive, user }) => {
   const userId = user?.uid;
@@ -89,11 +90,17 @@ const Detail = ({ setActive, user }) => {
   };
 
   const handleComment = async (e) => {
+    e.preventDefault();
     if (userComment.trim().length < 1) {
       toast.error("Enter text for comment");
       return;
     }
-    e.preventDefault();
+    const commentFlagged = await moderateContent(userComment);
+    if (commentFlagged) {
+      toast.error("Your comment does not meet language standard");
+      setLoading(false);
+      return;
+    }
     comments.push({
       createdAt: Timestamp.fromDate(new Date()),
       userId,
@@ -138,7 +145,7 @@ const Detail = ({ setActive, user }) => {
       document.documentElement.scrollHeight -
       document.documentElement.clientHeight;
     var scrolled = (winScroll / height) * 100;
-    // document.getElementById("myBar").style.width = scrolled + "%";
+    document.getElementById("myBar").style.width = scrolled + "%";
   };
 
   return (
