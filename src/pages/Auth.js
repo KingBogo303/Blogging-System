@@ -20,6 +20,7 @@ const initialState = {
 const Auth = ({ setActive, setUser }) => {
   const [state, setState] = useState(initialState);
   const [signUp, setSignUp] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const { email, password, firstName, lastName, confirmPassword } = state;
 
@@ -35,9 +36,11 @@ const Auth = ({ setActive, setUser }) => {
 
   const handleAuth = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
     if (!signUp) {
       if (email && password.length < 6) {
         toast.info("Password is min of 6 characters");
+        setSubmitting(false);
       } else if (email && password) {
         const { user } = await signInWithEmailAndPassword(
           auth,
@@ -48,14 +51,18 @@ const Auth = ({ setActive, setUser }) => {
           var errorMessage = error.message;
 
           toast.error(errorMessage);
+          setSubmitting(false);
         });
         setUser(user);
         setActive("home");
+        setSubmitting(false);
       } else {
+        setSubmitting(false);
         return toast.error("All fields are mandatory to fill");
       }
     } else {
       if (password !== confirmPassword) {
+        setSubmitting(false);
         return toast.error("Password don't match");
       }
       if (firstName && lastName && email && password) {
@@ -65,8 +72,10 @@ const Auth = ({ setActive, setUser }) => {
           password
         );
         await updateProfile(user, { displayName: `${firstName} ${lastName}` });
+        setSubmitting(false);
         setActive("home");
       } else {
+        setSubmitting(false);
         return toast.error("All fields are mandatory to fill");
       }
     }
@@ -147,8 +156,15 @@ const Auth = ({ setActive, setUser }) => {
                 <button
                   className={`btn ${!signUp ? "btn-sign-in" : "btn-sign-up"}`}
                   type="submit"
+                  disabled={submitting}
                 >
-                  {!signUp ? "Sign-in" : "Sign-up"}
+                  {!signUp
+                    ? !submitting
+                      ? "Sign-in"
+                      : "Signing-in..."
+                    : !submitting
+                    ? "Sign-up"
+                    : "Signing-up..."}
                 </button>
               </div>
             </form>
