@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const URL = "https://api.openai.com/v1/moderations";
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 
 export const moderateContent = async (text) => {
   try {
@@ -17,6 +17,7 @@ export const moderateContent = async (text) => {
       },
     });
     const { flagged } = data.data.results[0];
+    console.log(data.data.results[0]);
     return flagged;
   } catch (err) {
     console.log(err);
